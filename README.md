@@ -24,5 +24,5 @@ var authors = context.Authors.Where(author => author.FirstName = firstName).ToLi
 ```
 exec sp_executesql N'SELECT [a].[Id], [a].[FirstName], [a].[LastName]
 FROM [Authors] AS [a]
-WHERE [a].[LastName] = @__firstName_0',N'@__firstName_0 nvarchar(4000)',@__firstName_0=N'Sowndarrajan'
+WHERE [a].[FirstName] = @__firstName_0',N'@__firstName_0 nvarchar(4000)',@__firstName_0=N'Sowndarrajan'
 ```
