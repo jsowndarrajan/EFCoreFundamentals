@@ -14,7 +14,8 @@ GetAuthors();
 AddAuthor();
 GetAuthors();
 AddAuthorsAndBooks();
-GetAuthors();
+QueryAuthorsByName();
+QueryAuthorsByLastName("Karikalan");
 
 void AddAuthorsAndBooks()
 {
@@ -35,16 +36,7 @@ void GetAuthors()
     using (var context = new PublisherContext())
     {
         var authors = context.Authors.Include(author => author.Books).ToList();
-
-        foreach (var author in authors)
-        {
-            Console.WriteLine(author.FirstName + " " + author.LastName);
-
-            foreach (var authorBook in author.Books)
-            {
-                Console.WriteLine("\t" + authorBook.Title + " " + authorBook.PublishDate.ToString("d") + " " + authorBook.BasePrice.ToString("C"));
-            }
-        }
+        PrintAuthors(authors);
     }
 }
 
@@ -67,5 +59,39 @@ void DeleteAuthors()
             context.Authors.Remove(author);
         }
         context.SaveChanges();
+    }
+}
+
+void QueryAuthorsByName()
+{
+    using (var context = new PublisherContext())
+    {
+        //It will produce a non-parameterized SQL query
+        var authors = context.Authors.Where(author => author.FirstName == "Sowndarrajan").ToList();
+        PrintAuthors(authors);
+    }
+}
+
+void QueryAuthorsByLastName(string lastName)
+{
+    using (var context = new PublisherContext())
+    {
+        //It will produce a parameterized SQL query
+        var authors = context.Authors.Where(author => author.LastName == lastName).ToList();
+        PrintAuthors(authors);
+    }
+}
+
+void PrintAuthors(IEnumerable<Author> list)
+{
+    foreach (var author in list)
+    {
+        Console.WriteLine(author.FirstName + " " + author.LastName);
+
+        foreach (var authorBook in author.Books)
+        {
+            Console.WriteLine("\t" + authorBook.Title + " " + authorBook.PublishDate.ToString("d") + " " +
+                              authorBook.BasePrice.ToString("C"));
+        }
     }
 }
