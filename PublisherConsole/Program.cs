@@ -16,6 +16,29 @@ QueryAuthorsByName();
 QueryAuthorsByLastName("Karikalan");
 FilterAuthorsByPartialText();
 FindAuthorsById(1);
+AddSomeMoreAuthors();
+SkipAndTakeAuthors();
+
+void SkipAndTakeAuthors()
+{
+    var pageSize = 2;
+    for (var offset = 0; offset < 5; offset++)
+    {
+        var authors = context.Authors.Skip(pageSize * offset).Take(pageSize).ToList();
+        Console.WriteLine($"Page #{offset + 1}");
+        PrintAuthors(authors);
+    }
+}
+
+void AddSomeMoreAuthors()
+{
+    for (var i = 1; i <= 5; i++)
+    {
+        context.Authors.Add(new Author { FirstName = "Author", LastName = i.ToString() });
+    }
+
+    context.SaveChanges();
+}
 
 void FindAuthorsById(int authorId)
 {

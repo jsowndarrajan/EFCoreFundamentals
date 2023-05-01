@@ -22,6 +22,7 @@ However, if the query contains the variable name, it will produce a parameterize
 var firstName = "Sowndarrajan";
 var authors = context.Authors.Where(author => author.FirstName = firstName).ToList();
 ```
+
 *SQL Query*
 ```
 exec sp_executesql N'SELECT [a].[Id], [a].[FirstName], [a].[LastName]
@@ -61,9 +62,7 @@ foreach(var author in authors)
 ```
 
 ### EF Functions
-It provides CLR methods that get directly translated into database functions when used in LINQ to Entities queries.
-
-For instance, Like() method is transalated into SQL *LIKE* operations
+It provides CLR methods that get directly translated into database functions when used in LINQ to Entities queries. For instance, Like() method is transalated into SQL *LIKE* operations
 ```
 var authors = context.Authors.Where(author => EF.Functions.Like(author.FirstName, "S%"));
 ```
@@ -89,4 +88,20 @@ Find() method will use the same query execution plan for all the primary key val
 exec sp_executesql N'SELECT TOP(1) [a].[Id], [a].[FirstName], [a].[LastName]
 FROM [Authors] AS [a]
 WHERE [a].[Id] = @__p_0',N'@__p_0 int',@__p_0=1
+```
+
+### Pagination
+Skip() and Take() methods is used to fetch records based on the given pageSize and offset value.
+```
+var offset = 0;
+var pageSize = 10;
+var authors = context.Authors.Skip(pageSize * offset).Take(pageSize).ToList();
+```
+
+*SQL Query*
+```
+exec sp_executesql N'SELECT [a].[Id], [a].[FirstName], [a].[LastName]
+FROM [Authors] AS [a]
+ORDER BY (SELECT 1)
+OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY',N'@__p_0 int,@__p_1 int',@__p_0=0,@__p_1=10
 ```
