@@ -59,3 +59,18 @@ foreach(var author in authors)
 	CheckAuthorExistsInOtherSystem(author);
 }
 ```
+
+### EF Functions
+It provides CLR methods that get directly translated into database functions when used in LINQ to Entities queries.
+
+For instance, Like() method is transalated into SQL *LIKE* operations
+```
+var authors = context.Authors.Where(author => EF.Functions.Like(author.FirstName, "S%"));
+```
+
+*SQL Query*
+```
+SELECT [a].[Id], [a].[FirstName], [a].[LastName]
+FROM [Authors] AS [a]
+WHERE [a].[FirstName] LIKE N'S%'
+```

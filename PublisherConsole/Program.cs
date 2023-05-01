@@ -14,6 +14,19 @@ GetAuthors();
 AddAuthorsAndBooks();
 QueryAuthorsByName();
 QueryAuthorsByLastName("Karikalan");
+FilterAuthorsByPartialText();
+
+void FilterAuthorsByPartialText()
+{
+    var authors = context.Authors.Where(author => author.FirstName.Contains("So"));
+    PrintAuthors(authors);
+
+    var authors1 = context.Authors.Where(author => author.FirstName.StartsWith("So"));
+    PrintAuthors(authors1);
+
+    var authors2 = context.Authors.Where(author => EF.Functions.Like(author.FirstName, "So%"));
+    PrintAuthors(authors2);
+}
 
 void AddAuthorsAndBooks()
 {
