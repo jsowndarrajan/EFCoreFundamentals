@@ -4,10 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using PublisherData;
 using PublisherDomain;
 
-using (var context = new PublisherContext())
-{
-    context.Database.EnsureCreated();
-}
+var context = new PublisherContext();
+context.Database.EnsureCreated();
 
 DeleteAuthors();
 GetAuthors();
@@ -19,67 +17,49 @@ QueryAuthorsByLastName("Karikalan");
 
 void AddAuthorsAndBooks()
 {
-    using (var context = new PublisherContext())
-    {
-        var author = new Author { FirstName = "Sowndarrajan", LastName = "Jayapal" };
-        var book1 = new Book { Title = "ABC", PublishDate = new DateTime(2023, 04, 02), BasePrice = 100 };
-        var book2 = new Book { Title = "XYZ", PublishDate = new DateTime(2023, 02, 01), BasePrice = 200 };
+    var author = new Author { FirstName = "Sowndarrajan", LastName = "Jayapal" };
+    var book1 = new Book { Title = "ABC", PublishDate = new DateTime(2023, 04, 02), BasePrice = 100 };
+    var book2 = new Book { Title = "XYZ", PublishDate = new DateTime(2023, 02, 01), BasePrice = 200 };
 
-        author.Books = new List<Book> { book1, book2 };
-        context.Authors.Add(author);
-        context.SaveChanges();
-    }
+    author.Books = new List<Book> { book1, book2 };
+    context.Authors.Add(author);
+    context.SaveChanges();
 }
 
 void GetAuthors()
 {
-    using (var context = new PublisherContext())
-    {
-        var authors = context.Authors.Include(author => author.Books).ToList();
-        PrintAuthors(authors);
-    }
+    var authors = context.Authors.Include(author => author.Books).ToList();
+    PrintAuthors(authors);
 }
 
 void AddAuthor()
 {
     var author = new Author { FirstName = "Aathithaya", LastName = "Karikalan" };
-    using (var context = new PublisherContext())
-    {
-        context.Authors.Add(author);
-        context.SaveChanges();
-    }
+    context.Authors.Add(author);
+    context.SaveChanges();
 }
 
 void DeleteAuthors()
 {
-    using (var context = new PublisherContext())
+    foreach (var author in context.Authors)
     {
-        foreach (var author in context.Authors)
-        {
-            context.Authors.Remove(author);
-        }
-        context.SaveChanges();
+        context.Authors.Remove(author);
     }
+    context.SaveChanges();
 }
 
 void QueryAuthorsByName()
 {
-    using (var context = new PublisherContext())
-    {
-        //It will produce a non-parameterized SQL query
-        var authors = context.Authors.Where(author => author.FirstName == "Sowndarrajan").ToList();
-        PrintAuthors(authors);
-    }
+    //It will produce a non-parameterized SQL query
+    var authors = context.Authors.Where(author => author.FirstName == "Sowndarrajan").ToList();
+    PrintAuthors(authors);
 }
 
 void QueryAuthorsByLastName(string lastName)
 {
-    using (var context = new PublisherContext())
-    {
-        //It will produce a parameterized SQL query
-        var authors = context.Authors.Where(author => author.LastName == lastName).ToList();
-        PrintAuthors(authors);
-    }
+    //It will produce a parameterized SQL query
+    var authors = context.Authors.Where(author => author.LastName == lastName).ToList();
+    PrintAuthors(authors);
 }
 
 void PrintAuthors(IEnumerable<Author> list)
