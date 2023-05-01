@@ -74,3 +74,19 @@ SELECT [a].[Id], [a].[FirstName], [a].[LastName]
 FROM [Authors] AS [a]
 WHERE [a].[FirstName] LIKE N'S%'
 ```
+
+### Find
+It will help to find an entity based on the primary key value. If the entity value exists in the DbContext, it will return the value directly from the context. Otherwise, it will make a call to database, and will fetch the record.
+```
+var authorId = 1;
+var author = context.Authors.Find(authorId);
+```
+
+Find() method will use the same query execution plan for all the primary key values, and that's why EF Core converts the method into `sp_executesql` statement
+
+*SQL Query*
+```
+exec sp_executesql N'SELECT TOP(1) [a].[Id], [a].[FirstName], [a].[LastName]
+FROM [Authors] AS [a]
+WHERE [a].[Id] = @__p_0',N'@__p_0 int',@__p_0=1
+```

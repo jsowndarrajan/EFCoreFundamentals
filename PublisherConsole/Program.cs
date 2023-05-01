@@ -15,6 +15,13 @@ AddAuthorsAndBooks();
 QueryAuthorsByName();
 QueryAuthorsByLastName("Karikalan");
 FilterAuthorsByPartialText();
+FindAuthorsById(1);
+
+void FindAuthorsById(int authorId)
+{
+    var author = context.Authors.Find(authorId);
+    PrintAuthor(author);
+}
 
 void FilterAuthorsByPartialText()
 {
@@ -79,12 +86,23 @@ void PrintAuthors(IEnumerable<Author> list)
 {
     foreach (var author in list)
     {
-        Console.WriteLine(author.FirstName + " " + author.LastName);
+        PrintAuthor(author);
+    }
+}
 
-        foreach (var authorBook in author.Books)
-        {
-            Console.WriteLine("\t" + authorBook.Title + " " + authorBook.PublishDate.ToString("d") + " " +
-                              authorBook.BasePrice.ToString("C"));
-        }
+void PrintAuthor(Author author)
+{
+    if (author is null)
+    {
+        Console.WriteLine("Unknown author");
+        return;
+    }
+
+    Console.WriteLine(author.FirstName + " " + author.LastName);
+
+    foreach (var authorBook in author.Books)
+    {
+        Console.WriteLine("\t" + authorBook.Title + " " + authorBook.PublishDate.ToString("d") + " " +
+                          authorBook.BasePrice.ToString("C"));
     }
 }
