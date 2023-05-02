@@ -105,3 +105,51 @@ FROM [Authors] AS [a]
 ORDER BY (SELECT 1)
 OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY',N'@__p_0 int,@__p_1 int',@__p_0=0,@__p_1=10
 ```
+
+### Ordering
+OrderBy() method is used to order the records in ascending order
+```
+var authors =  context.Authors.OrderBy(author => author.FirstName).ToList();
+```
+*SQL Query*
+```
+SELECT [a].[Id], [a].[FirstName], [a].[LastName]
+FROM [Authors] AS [a]
+ORDER BY [a].[FirstName]
+```
+OrderByDescending() method is used to order the records in desending order
+```
+var authors =  context.Authors.OrderByDescending(author => author.FirstName).ToList();
+```
+*SQL Query*
+```
+SELECT [a].[Id], [a].[FirstName], [a].[LastName]
+FROM [Authors] AS [a]
+ORDER BY [a].[FirstName] DESC
+```
+ThenBy() method can be used to further order the previously ordered records based on another field in ascending order
+```
+var authors = context.Authors
+                     .OrderBy(author => author.FirstName)
+                     .ThenBy(author => author.LastName)
+                     .ToList();
+```
+*SQL Query*
+```
+SELECT [a].[Id], [a].[FirstName], [a].[LastName]
+FROM [Authors] AS [a]
+ORDER BY [a].[FirstName], [a].[LastName]
+```
+ThenByDescending() method can be used to further order the previously ordered records based on another field in desecnding order
+```
+var authors = context.Authors
+                     .OrderByDescending(author => author.FirstName)
+                     .ThenByDescending(author => author.LastName)
+                     .ToList();
+```
+*SQL Query*
+```
+SELECT [a].[Id], [a].[FirstName], [a].[LastName]
+FROM [Authors] AS [a]
+ORDER BY [a].[FirstName] DESC, [a].[LastName] DESC
+```

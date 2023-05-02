@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Humanizer" Version="2.14.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\PublisherData\PublisherData.csproj" />
     <ProjectReference Include="..\PublisherDomain\PublisherDomain.csproj" />
   </ItemGroup>

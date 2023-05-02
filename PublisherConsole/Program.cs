@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using Humanizer;
 using Microsoft.EntityFrameworkCore;
 using PublisherData;
 using PublisherDomain;
@@ -18,9 +19,39 @@ FilterAuthorsByPartialText();
 FindAuthorsById(1);
 AddSomeMoreAuthors();
 SkipAndTakeAuthors();
+OrderAuthorsByName();
+
+void OrderAuthorsByName()
+{
+    var orderAuthorsByFirstNameAsc =  context.Authors.OrderBy(author => author.FirstName).ToList();
+
+    PrintTitle(nameof(orderAuthorsByFirstNameAsc).Humanize(LetterCasing.Title));
+    PrintAuthors(orderAuthorsByFirstNameAsc);
+
+    var orderAuthorsByFirstNameDesc =  context.Authors.OrderByDescending(author => author.FirstName).ToList();
+
+    PrintTitle(nameof(orderAuthorsByFirstNameDesc).Humanize(LetterCasing.Title));
+    PrintAuthors(orderAuthorsByFirstNameDesc);
+
+    var orderAuthorsByFirstAndLastNameAsc =  context.Authors
+                                                    .OrderBy(author => author.FirstName)
+                                                    .ThenBy(author => author.LastName)
+                                                    .ToList();
+
+    PrintTitle(nameof(orderAuthorsByFirstAndLastNameAsc).Humanize(LetterCasing.Title));
+    PrintAuthors(orderAuthorsByFirstAndLastNameAsc);
+
+    var orderAuthorsByFirstAndLastNameDesc =  context.Authors
+                                                     .OrderByDescending(author => author.FirstName)
+                                                     .ThenByDescending(author => author.LastName)
+                                                     .ToList();
+    PrintTitle(nameof(orderAuthorsByFirstAndLastNameDesc).Humanize(LetterCasing.Title));
+    PrintAuthors(orderAuthorsByFirstAndLastNameDesc);
+}
 
 void SkipAndTakeAuthors()
 {
+    PrintTitle(nameof(SkipAndTakeAuthors).Humanize(LetterCasing.Title));
     var pageSize = 2;
     for (var offset = 0; offset < 5; offset++)
     {
@@ -42,12 +73,14 @@ void AddSomeMoreAuthors()
 
 void FindAuthorsById(int authorId)
 {
+    PrintTitle(nameof(FindAuthorsById).Humanize(LetterCasing.Title));
     var author = context.Authors.Find(authorId);
     PrintAuthor(author);
 }
 
 void FilterAuthorsByPartialText()
 {
+    PrintTitle(nameof(FilterAuthorsByPartialText).Humanize(LetterCasing.Title));
     var authors = context.Authors.Where(author => author.FirstName.Contains("So"));
     PrintAuthors(authors);
 
@@ -93,6 +126,7 @@ void DeleteAuthors()
 
 void QueryAuthorsByName()
 {
+    PrintTitle(nameof(QueryAuthorsByName).Humanize(LetterCasing.Title));
     //It will produce a non-parameterized SQL query
     var authors = context.Authors.Where(author => author.FirstName == "Sowndarrajan").ToList();
     PrintAuthors(authors);
@@ -100,6 +134,7 @@ void QueryAuthorsByName()
 
 void QueryAuthorsByLastName(string lastName)
 {
+    PrintTitle(nameof(QueryAuthorsByLastName).Humanize(LetterCasing.Title));
     //It will produce a parameterized SQL query
     var authors = context.Authors.Where(author => author.LastName == lastName).ToList();
     PrintAuthors(authors);
@@ -128,4 +163,9 @@ void PrintAuthor(Author author)
         Console.WriteLine("\t" + authorBook.Title + " " + authorBook.PublishDate.ToString("d") + " " +
                           authorBook.BasePrice.ToString("C"));
     }
+}
+
+void PrintTitle(string title)
+{
+    Console.WriteLine($"\n************************ {title} ************************");
 }
